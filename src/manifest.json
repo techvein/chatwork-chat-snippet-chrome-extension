@@ -3,7 +3,7 @@
 
   "name": "ChatWork チャット入力支援ツール",
   "description": "ChatWorkのチャット入力欄に便利な機能を追加するChrome拡張です。",
-  "version": "1.0",
+  "version": "1.0.1",
 
   "icons": {
     "16": "icon16.png",
@@ -19,7 +19,6 @@
    "run_at": "document_idle"
   }],
   "permissions": [
-    "tabs",
     "https://www.chatwork.com/",
     "https://kcw.kddi.ne.jp/"
   ]
