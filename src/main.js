@@ -13,10 +13,25 @@
   chatSendTool.appendChild(code);
 
   code.addEventListener('click', function(){
-	    var chatText = document.querySelector('#_chatText');
-	    replaceTextArea(chatText,function(text){
-		    return '[code]' + text + '[/code]';
-		  });
+    var chatText = document.querySelector('#_chatText');
+    replaceTextArea(chatText,function(texts){
+      var prefix = '[code]';
+      var postfix = '[/code]';
+
+      // 改行を足す(重複チェックあり)
+      if(texts.selectedText.substr(0,1) != '\n'){
+        prefix += '\n'; // codeは１行目の改行をスキップしてくれる。
+      }
+      if(texts.selectedText.slice(-1) != '\n'){ // last char
+        postfix = '\n' + postfix;
+      }
+      if(texts.postText.substr(0,1) != '\n'){
+        postfix += '\n';
+      }
+      texts.preText +=  prefix;
+      texts.postText = postfix + texts.postText;
+      return texts;
+	  });
  	});
 
   var info = document.createElement('li');
@@ -27,25 +42,52 @@
   info.appendChild(document.createTextNode('[info]'));
   chatSendTool.appendChild(info);
 
+
   info.addEventListener('click', function(){
     var chatText = document.querySelector('#_chatText');
-    replaceTextArea(chatText,function(text){
-	    return '[info]' + text + '[/info]';
-		});
+    replaceTextArea(chatText,function(texts){
+      var prefix = '[info]';
+      var postfix = '[/info]';
+
+      // 改行を足す(重複チェックあり)
+      if(texts.selectedText.slice(-1) != '\n'){ // last char
+        postfix = '\n' + postfix;
+      }
+      if(texts.postText.substr(0,1) != '\n'){
+        postfix += '\n';
+      }
+      texts.preText +=  prefix;
+      texts.postText = postfix + texts.postText;
+      return texts;
+	  });
 	});
-  function replaceTextArea(textArea, filterSelectedText){
-  	if(!textArea){
-  	    console.log('missing textArea');
-  	    return;
-  	}
-  	textArea.focus();
-  	var content = textArea.value;
-  	var start = textArea.selectionStart;
-  	var end = textArea.selectionEnd;
-  	var preText = content.substr(0, start);
-  	var postText = content.substr(end);
-  	var selectedText = content.substr(start, end - start);
-  	var res = preText + filterSelectedText(selectedText) + postText;
-  	textArea.value = res;
-  }
+    function replaceTextArea(textArea, filter){
+    	if(!textArea){
+    	    console.log('missing textArea');
+    	    return;
+    	}
+
+
+    	textArea.focus();
+    	var content = textArea.value;
+    	var start = textArea.selectionStart;
+    	var end = textArea.selectionEnd;
+
+    	var texts = {
+        'preText': content.substr(0, start),
+    	  'postText': content.substr(end),
+    	  'selectedText': content.substr(start, end - start)
+      };
+
+      if(filter){
+        texts = filter(texts);
+      }
+
+    	var res = texts.preText + texts.selectedText + texts.postText;
+    	textArea.value = res;
+      // 選択状態・カーソル位置を復元する。
+      textArea.selectionStart = texts.preText.length;
+      textArea.selectionEnd = texts.preText.length + texts.selectedText.length;
+
+    }
 })();
