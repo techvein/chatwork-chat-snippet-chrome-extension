@@ -39,6 +39,7 @@
       code.setAttribute('role', 'button');
       code.setAttribute('class', '_showDescription icoFont');
       code.setAttribute('aria-label', description);
+      code.setAttribute('style', 'font-size:13px;');
       code.appendChild(iconNode);
       chatSendTool.appendChild(code);
 
