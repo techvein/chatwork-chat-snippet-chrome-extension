@@ -16,21 +16,27 @@
     	var start = textArea.selectionStart;
     	var end = textArea.selectionEnd;
 
-    	var texts = {
-        'preText': content.substr(0, start),
-    	  'postText': content.substr(end),
-    	  'selectedText': content.substr(start, end - start)
-      };
+        var texts = {
+            'preText': content.substr(0, start),
+            'postText': content.substr(end),
+            'selectedText': content.substr(start, end - start)
+        };
+
+        texts.concat = function(){
+            return this.preText + this.selectedText + this.postText;
+        }.bind(texts);
 
       if(filter){
-        texts = filter(texts);
+        texts = filter(texts, content);
       }
 
-    	var res = texts.preText + texts.selectedText + texts.postText;
+    	var res = texts.concat();
     	textArea.value = res;
       // 選択状態・カーソル位置を復元する。
       textArea.selectionStart = texts.preText.length;
       textArea.selectionEnd = texts.preText.length + texts.selectedText.length;
+
+        fireEvent(textArea, "change");
 
     }
     function createIcon(iconNode, description, filterFunc){
@@ -48,6 +54,23 @@
         replaceTextArea(chatText,filterFunc);
      	});
     }
+
+    /// utility
+    function fireEvent(element,event){
+        if (document.createEventObject){
+            // dispatch for IE
+            var evt = document.createEventObject();
+            return element.fireEvent('on'+event,evt)
+        }
+        else{
+            // dispatch for firefox + others
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent(event, true, true ); // event type,bubbling,cancelable
+            return !element.dispatchEvent(evt);
+        }
+    }
+
+    // execute
 
     createIcon(
       document.createTextNode('[code]'),
@@ -99,4 +122,16 @@
         return texts;
 	  });
 
+    createIcon(
+        document.createTextNode('shorten [To]'),
+        '[To:]を短くする',
+        function(texts, original){
+            var text = original;
+            var replaced = text.replace(/(\[To:\d+\])[^\[]+?((?=\[)|\n|$)/gi, "$1 ");
+
+            texts.preText = replaced;
+            texts.selectedText= "";
+            texts.postText = "";
+            return texts;
+        });
 })();
