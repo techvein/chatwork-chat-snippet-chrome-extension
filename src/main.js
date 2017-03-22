@@ -4,6 +4,43 @@
   var chatSendTool = document.querySelector('#_chatSendTool');
   if(!chatSendTool){ return; }
 
+    // textarea の Undo 対応
+    // https://mimemo.io/m/mqLXOlJe7ozQ19r
+    // ※this.inputElmが対象になるtextarea
+    function replaceWithRecoverable(textArea, str, fromIdx, toIdx) {
+        var inserted = false;
+
+        if (str) {
+            var expectedLen = textArea.value.length - Math.abs(toIdx - fromIdx) + str.length;
+            textArea.focus();
+            textArea.selectionStart = fromIdx;
+            textArea.selectionEnd = toIdx;
+            try {
+                inserted = document.execCommand('insertText', false, str);
+            } catch (e) {
+                inserted = false
+            }
+            if (inserted && (textArea.value.length !== expectedLen || textArea.value.substr(fromIdx, str.length) !== str)) {
+                //firefoxでなぜかうまくいってないくせにinsertedがtrueになるので失敗を検知してfalseに…
+                inserted = false;
+            }
+        }
+
+        if (!inserted) {
+            try {
+                document.execCommand('ms-beginUndoUnit');
+            } catch (e) {}
+            var value = textArea.value;
+            textArea.value = '' + value.substring(0, fromIdx) + str + value.substring(toIdx);
+            try {
+                document.execCommand('ms-endUndoUnit');
+            } catch (e) {}
+        }
+    }
+
+
+
+
     function replaceTextArea(textArea, filter){
     	if(!textArea){
     	    console.log('missing textArea');
@@ -30,8 +67,10 @@
         texts = filter(texts, content);
       }
 
+
     	var res = texts.concat();
-    	textArea.value = res;
+        replaceWithRecoverable(textArea, res, 0, content.length);
+    	// textArea.value = res;
       // 選択状態・カーソル位置を復元する。
       textArea.selectionStart = texts.preText.length;
       textArea.selectionEnd = texts.preText.length + texts.selectedText.length;
