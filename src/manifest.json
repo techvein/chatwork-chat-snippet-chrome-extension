@@ -11,7 +11,7 @@
     "128": "icon128.png"
   },
   "web_accessible_resources": [
-    "images/to_anon2.png"
+    "images/to_anon.png"
   ],
   "content_scripts": [{
     "matches": [

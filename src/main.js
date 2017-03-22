@@ -162,7 +162,7 @@
         });
 
     var img = document.createElement('img');
-    img.src=chrome.extension.getURL('images/to_anon2.png');
+    img.src=chrome.extension.getURL('images/to_anon.png');
     img.style="width:40px; height:18px";
     createIcon(
         img,
