@@ -45,7 +45,7 @@
       code.setAttribute('role', 'button');
       code.setAttribute('class', '_showDescription icoFont');
       code.setAttribute('aria-label', description);
-      code.setAttribute('style', 'font-size:13px;');
+      code.setAttribute('style', 'font-size:13px;margin-right:6px;cursor: pointer;');
       code.appendChild(iconNode);
       chatSendTool.appendChild(code);
 
@@ -122,9 +122,12 @@
         return texts;
 	  });
 
+    var img = document.createElement('img');
+    img.src=chrome.extension.getURL('images/to_anon2.png');
+    img.style="width:40px; height:18px";
     createIcon(
-        document.createTextNode('shorten [To]'),
-        '[To:]を短くする',
+        img,
+        '[To:]を短くします',
         function(texts, original){
             var text = original;
             var replaced = text.replace(/(\[To:\d+\])[^\[]+?((?=\[)|\n|$)/gi, "$1 ");
