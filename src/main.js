@@ -1,4 +1,4 @@
-(async function(){
+(async function () {
     console.log('chatwork snippets loaded');
     let chatSendTool = null;
 
@@ -17,7 +17,9 @@
 
     await seekToolBar();
 
-    if(!chatSendTool){ return; }
+    if (!chatSendTool) {
+        return;
+    }
 
     // textarea の Undo 対応
     // https://mimemo.io/m/mqLXOlJe7ozQ19r
@@ -44,20 +46,20 @@
         if (!inserted) {
             try {
                 document.execCommand('ms-beginUndoUnit');
-            } catch (e) {}
+            } catch (e) {
+            }
             let value = textArea.value;
             textArea.value = '' + value.substring(0, fromIdx) + str + value.substring(toIdx);
             try {
                 document.execCommand('ms-endUndoUnit');
-            } catch (e) {}
+            } catch (e) {
+            }
         }
     }
 
 
-
-
-    function replaceTextArea(textArea, filter){
-        if(!textArea){
+    function replaceTextArea(textArea, filter) {
+        if (!textArea) {
             console.log('missing textArea');
             return;
         }
@@ -74,11 +76,11 @@
             'selectedText': content.substr(start, end - start)
         };
 
-        texts.concat = function(){
+        texts.concat = function () {
             return this.preText + this.selectedText + this.postText;
         }.bind(texts);
 
-        if(filter){
+        if (filter) {
             texts = filter(texts, content);
         }
 
@@ -93,7 +95,8 @@
         fireEvent(textArea, "change");
 
     }
-    function createIcon(iconNode, description, filterFunc){
+
+    function createIcon(iconNode, description, filterFunc) {
         let code = document.createElement('li');
         code.setAttribute('id', '_techvein_codeIcon');
         code.setAttribute('role', 'button');
@@ -103,23 +106,23 @@
         code.appendChild(iconNode);
         chatSendTool.appendChild(code);
 
-        code.addEventListener('click', function(){
+        code.addEventListener('click', function () {
             let chatText = document.querySelector('#_chatText');
-            replaceTextArea(chatText,filterFunc);
+            replaceTextArea(chatText, filterFunc);
         });
     }
 
     /// utility
-    function fireEvent(element,event){
-        if (document.createEventObject){
+    function fireEvent(element, event) {
+        if (document.createEventObject) {
             // dispatch for IE
             let evt = document.createEventObject();
-            return element.fireEvent('on'+event,evt)
+            return element.fireEvent('on' + event, evt)
         }
-        else{
+        else {
             // dispatch for firefox + others
             let evt = document.createEvent("HTMLEvents");
-            evt.initEvent(event, true, true ); // event type,bubbling,cancelable
+            evt.initEvent(event, true, true); // event type,bubbling,cancelable
             return !element.dispatchEvent(evt);
         }
     }
@@ -129,21 +132,21 @@
     createIcon(
         document.createTextNode('[code]'),
         '[code]タグ埋め込み',
-        function(texts){
+        function (texts) {
             let prefix = '[code]';
             let postfix = '[/code]';
 
             // 改行を足す(重複チェックあり)
-            if(texts.selectedText.substr(0,1) !== '\n'){
+            if (texts.selectedText.substr(0, 1) !== '\n') {
                 prefix += '\n'; // codeは１行目の改行をスキップしてくれる。
             }
-            if(texts.selectedText.slice(-1) !== '\n'){ // last char
+            if (texts.selectedText.slice(-1) !== '\n') { // last char
                 postfix = '\n' + postfix;
             }
-            if(texts.postText.substr(0,1) !== '\n'){
+            if (texts.postText.substr(0, 1) !== '\n') {
                 postfix += '\n';
             }
-            texts.preText +=  prefix;
+            texts.preText += prefix;
             texts.postText = postfix + texts.postText;
             return texts;
         });
@@ -151,18 +154,18 @@
     createIcon(
         document.createTextNode('[info]'),
         '[info]タグ埋め込み',
-        function(texts){
+        function (texts) {
             let prefix = '[info]';
             let postfix = '[/info]';
 
             // 改行を足す(重複チェックあり)
-            if(texts.selectedText.slice(-1) !== '\n'){ // last char
+            if (texts.selectedText.slice(-1) !== '\n') { // last char
                 postfix = '\n' + postfix;
             }
-            if(texts.postText.substr(0,1) !== '\n'){
+            if (texts.postText.substr(0, 1) !== '\n') {
                 postfix += '\n';
             }
-            texts.preText +=  prefix;
+            texts.preText += prefix;
             texts.selectedText = '[title][/title]' + texts.selectedText;
             texts.postText = postfix + texts.postText;
             return texts;
@@ -171,20 +174,20 @@
     createIcon(
         document.createTextNode('[hr]'),
         '[hr]タグ埋め込み',
-        function(texts){
+        function (texts) {
             texts.preText += '[hr]';
             return texts;
         });
 
     let img = document.createElement('img');
-    img.src=chrome.extension.getURL('images/to_anon.png');
-    img.style="width:40px; height:18px";
+    img.src = chrome.extension.getURL('images/to_anon.png');
+    img.style = "width:40px; height:18px";
     createIcon(
         img,
         '[To:]を短くします',
-        function(texts, original){
+        function (texts, original) {
             texts.preText = original.replace(/(\[To:\d+\])[^\[]+?((?=\[)|\n|$)/gi, "$1 ");
-            texts.selectedText= "";
+            texts.selectedText = "";
             texts.postText = "";
             return texts;
         });
