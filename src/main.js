@@ -1,7 +1,23 @@
-(function(){
+(async function(){
 // document.addEventListener("DOMContentLoaded", function(e){
     console.log('chatwork snippets loaded');
-    var chatSendTool = document.querySelector('#_chatSendTool');
+    var chatSendTool = null;
+
+    function seekToolBar() {
+        return new Promise(function (resolve, reject) {
+            let setToolBar = setInterval(function () {
+                chatSendTool = document.querySelector('#_chatSendTool');
+                console.log(chatSendTool);
+                if (chatSendTool) {
+                    clearInterval(setToolBar);
+                    resolve();
+                }
+            }, 1000);
+        });
+    }
+
+    await seekToolBar();
+
     if(!chatSendTool){ return; }
 
     // textarea の Undo 対応
