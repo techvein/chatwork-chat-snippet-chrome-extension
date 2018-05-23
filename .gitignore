@@ -1,3 +1,4 @@
 out/
 .DS_Store
-
+.idea
+chatwork-chat-snippet-chrome-extension.iml
