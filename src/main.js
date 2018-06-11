@@ -191,4 +191,29 @@
             texts.postText = "";
             return texts;
         });
+
+     // "@"が入力された時に、"TO"がクリックされる
+     document.getElementById("_chatText").addEventListener("input", (event) => {
+        const cursorPos = event.target.selectionStart;
+        const content = event.target.value;
+        const lastChar = content.charAt(cursorPos - 1);
+        if (lastChar === '@') {
+            document.getElementById("_to").click();
+        }
+    });
+
+    // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
+    document.getElementById("_toList").addEventListener("click", (event) => {
+        const textArea = document.getElementById("_chatText");
+        const cursorPos = textArea.selectionStart;
+        // 埋め込まれたTOを探す
+        const content = textArea.value;
+        // FIXME: toallもあるよ
+        const toPos = content.substr(0, cursorPos).lastIndexOf("[To:");
+        const targetChar = content.charAt(toPos - 1);
+        if (targetChar !== '@') {
+            return;
+        }
+        textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
+    });
 })();
