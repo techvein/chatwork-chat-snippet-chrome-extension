@@ -21,6 +21,8 @@
         return;
     }
 
+    const textArea = document.getElementById("_chatText");
+
     // textarea の Undo 対応
     // https://mimemo.io/m/mqLXOlJe7ozQ19r
     // ※this.inputElmが対象になるtextarea
@@ -107,8 +109,7 @@
         chatSendTool.appendChild(code);
 
         code.addEventListener('click', function () {
-            let chatText = document.querySelector('#_chatText');
-            replaceTextArea(chatText, filterFunc);
+            replaceTextArea(textArea, filterFunc);
         });
     }
 
@@ -191,4 +192,34 @@
             texts.postText = "";
             return texts;
         });
+
+    // "@"が入力された時に、"TO"がクリックされる
+    textArea.addEventListener("keypress", (event) => {
+        if (event.key === '@') {
+            document.getElementById("_to").click();
+        }
+    });
+
+    // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
+    const toList = document.getElementById("_toList");
+    toList.addEventListener("click", () => {
+        const cursorPos = textArea.selectionStart;
+        // 埋め込まれたTOを探す
+        const content = textArea.value;
+        const subContent = content.substr(0, cursorPos);
+        const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
+
+        const targetChar = content.charAt(toPos - 1);
+        if (targetChar !== '@') {
+            return;
+        }
+        textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
+    });
+
+    // 宛先リストが開いている際 ESC を押した時に入力エリアにフォーカスが戻るように
+    toList.querySelector("input.tooltip__searchForm").addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            textArea.focus();
+        }
+    });
 })();
