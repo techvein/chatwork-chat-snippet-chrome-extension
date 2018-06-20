@@ -206,8 +206,8 @@
         const cursorPos = textArea.selectionStart;
         // 埋め込まれたTOを探す
         const content = textArea.value;
-        // FIXME: toallもあるよ
-        const toPos = content.substr(0, cursorPos).lastIndexOf("[To:");
+        const toPos = Math.max(content.substr(0, cursorPos).lastIndexOf("[To:"), content.substr(0, cursorPos).lastIndexOf("[toall]"));
+
         const targetChar = content.charAt(toPos - 1);
         if (targetChar !== '@') {
             return;
