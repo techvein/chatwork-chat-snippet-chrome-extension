@@ -216,4 +216,10 @@
         }
         textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
     });
+
+    document.querySelector("#_toList input.tooltip__searchForm").addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            document.getElementById("_chatText").focus();
+        }
+    });
 })();
