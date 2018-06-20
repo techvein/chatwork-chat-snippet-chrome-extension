@@ -21,6 +21,8 @@
         return;
     }
 
+    const textArea = document.getElementById("_chatText");
+
     // textarea の Undo 対応
     // https://mimemo.io/m/mqLXOlJe7ozQ19r
     // ※this.inputElmが対象になるtextarea
@@ -107,8 +109,7 @@
         chatSendTool.appendChild(code);
 
         code.addEventListener('click', function () {
-            let chatText = document.querySelector('#_chatText');
-            replaceTextArea(chatText, filterFunc);
+            replaceTextArea(textArea, filterFunc);
         });
     }
 
@@ -191,8 +192,6 @@
             texts.postText = "";
             return texts;
         });
-
-    const textArea = document.getElementById("_chatText");
 
     // "@"が入力された時に、"TO"がクリックされる
     textArea.addEventListener("keypress", (event) => {
