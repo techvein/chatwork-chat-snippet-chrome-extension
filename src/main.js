@@ -216,6 +216,7 @@
         textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
     });
 
+    // 宛先リストが開いている際 ESC を押した時に入力エリアにフォーカスが戻るように
     toList.querySelector("input.tooltip__searchForm").addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
             textArea.focus();
