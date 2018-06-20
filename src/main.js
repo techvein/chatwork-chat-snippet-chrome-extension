@@ -203,7 +203,7 @@
 
     // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
     const toList = document.getElementById("_toList");
-    toList.addEventListener("click", (event) => {
+    toList.addEventListener("click", () => {
         const cursorPos = textArea.selectionStart;
         // 埋め込まれたTOを探す
         const content = textArea.value;
