@@ -192,8 +192,10 @@
             return texts;
         });
 
+    const textArea = document.getElementById("_chatText");
+
     // "@"が入力された時に、"TO"がクリックされる
-    document.getElementById("_chatText").addEventListener("keypress", (event) => {
+    textArea.addEventListener("keypress", (event) => {
         console.log(event.key);
         if (event.key === '@') {
             document.getElementById("_to").click();
@@ -201,12 +203,13 @@
     });
 
     // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
-    document.getElementById("_toList").addEventListener("click", (event) => {
-        const textArea = document.getElementById("_chatText");
+    const toList = document.getElementById("_toList");
+    toList.addEventListener("click", (event) => {
         const cursorPos = textArea.selectionStart;
         // 埋め込まれたTOを探す
         const content = textArea.value;
-        const toPos = Math.max(content.substr(0, cursorPos).lastIndexOf("[To:"), content.substr(0, cursorPos).lastIndexOf("[toall]"));
+        const subContent = content.substr(0, cursorPos);
+        const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
 
         const targetChar = content.charAt(toPos - 1);
         if (targetChar !== '@') {
@@ -215,9 +218,9 @@
         textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
     });
 
-    document.querySelector("#_toList input.tooltip__searchForm").addEventListener("keydown", (event) => {
+    toList.querySelector("input.tooltip__searchForm").addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-            document.getElementById("_chatText").focus();
+            textArea.focus();
         }
     });
 })();
