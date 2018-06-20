@@ -196,7 +196,6 @@
 
     // "@"が入力された時に、"TO"がクリックされる
     textArea.addEventListener("keypress", (event) => {
-        console.log(event.key);
         if (event.key === '@') {
             document.getElementById("_to").click();
         }
