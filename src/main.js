@@ -192,12 +192,10 @@
             return texts;
         });
 
-     // "@"が入力された時に、"TO"がクリックされる
-     document.getElementById("_chatText").addEventListener("input", (event) => {
-        const cursorPos = event.target.selectionStart;
-        const content = event.target.value;
-        const lastChar = content.charAt(cursorPos - 1);
-        if (lastChar === '@') {
+    // "@"が入力された時に、"TO"がクリックされる
+    document.getElementById("_chatText").addEventListener("keypress", (event) => {
+        console.log(event.key);
+        if (event.key === '@') {
             document.getElementById("_to").click();
         }
     });
