@@ -200,6 +200,14 @@
         }
     });
 
+    // "@"が入力された時に、"TO"がクリックされる
+    const fileUploadTextArea = document.getElementById("_fileUploadMessage");
+    fileUploadTextArea.addEventListener("keypress", (event) => {
+        if (event.key === '@') {
+            document.getElementById("_mentionSelectFileUpload").click();
+        }
+    });
+
     // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
     const toList = document.getElementById("_toList");
     toList.addEventListener("click", () => {
@@ -214,6 +222,22 @@
             return;
         }
         textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
+    });
+
+    // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
+    const toListFileUpload = document.getElementById("_toListFileUpload");
+    toListFileUpload.addEventListener("click", () => {
+        const cursorPos = fileUploadTextArea.selectionStart;
+        // 埋め込まれたTOを探す
+        const content = fileUploadTextArea.value;
+        const subContent = content.substr(0, cursorPos);
+        const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
+
+        const targetChar = content.charAt(toPos - 1);
+        if (targetChar !== '@') {
+            return;
+        }
+        fileUploadTextArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
     });
 
     // 宛先リストが開いている際 ESC を押した時に入力エリアにフォーカスが戻るように
