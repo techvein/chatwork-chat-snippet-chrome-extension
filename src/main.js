@@ -193,52 +193,48 @@
             return texts;
         });
 
-    // "@"が入力された時に、"TO"がクリックされる
-    textArea.addEventListener("keypress", (event) => {
-        if (event.key === '@') {
-            document.getElementById("_to").click();
-        }
-    });
+    // --------
 
-    // "@"が入力された時に、"TO"がクリックされる
-    const fileUploadTextArea = document.getElementById("_fileUploadMessage");
-    fileUploadTextArea.addEventListener("keypress", (event) => {
-        if (event.key === '@') {
-            document.getElementById("_mentionSelectFileUpload").click();
-        }
-    });
+    /// "@"が入力された時に、"TO"がクリックされる機能をtextAreaに追加する
+    function registerAtmarkShortcutEvent(textArea, toListButton, toList) {
+        // "@"が入力された時に、"TO"がクリックされる
+        textArea.addEventListener("keypress", (event) => {
+            if (event.key === '@') {
+                toListButton.click();
+            }
+        });
 
-    // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
+        // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
+        toList.addEventListener("click", () => {
+            const cursorPos = textArea.selectionStart;
+            // 埋め込まれたTOを探す
+            const content = textArea.value;
+            const subContent = content.substr(0, cursorPos);
+            const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
+
+            const targetChar = content.charAt(toPos - 1);
+            if (targetChar !== '@') {
+                return;
+            }
+            textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
+        });
+    }
+
     const toList = document.getElementById("_toList");
-    toList.addEventListener("click", () => {
-        const cursorPos = textArea.selectionStart;
-        // 埋め込まれたTOを探す
-        const content = textArea.value;
-        const subContent = content.substr(0, cursorPos);
-        const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
 
-        const targetChar = content.charAt(toPos - 1);
-        if (targetChar !== '@') {
-            return;
-        }
-        textArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
-    });
+    // メインのチャット画面
+    registerAtmarkShortcutEvent(
+        textArea,
+        document.getElementById("_to"),
+        toList
+    );
 
-    // TO(宛先)のリストを選択した場合、"@"があれば"@"を消す
-    const toListFileUpload = document.getElementById("_toListFileUpload");
-    toListFileUpload.addEventListener("click", () => {
-        const cursorPos = fileUploadTextArea.selectionStart;
-        // 埋め込まれたTOを探す
-        const content = fileUploadTextArea.value;
-        const subContent = content.substr(0, cursorPos);
-        const toPos = Math.max(subContent.lastIndexOf("[To:"), subContent.lastIndexOf("[toall]"));
-
-        const targetChar = content.charAt(toPos - 1);
-        if (targetChar !== '@') {
-            return;
-        }
-        fileUploadTextArea.value = content.slice(0, toPos - 1) + content.slice(toPos);
-    });
+    // 画像アップロードモーダル
+    registerAtmarkShortcutEvent(
+        document.getElementById("_fileUploadMessage"),
+        document.getElementById("_mentionSelectFileUpload"),
+        document.getElementById("_toListFileUpload")
+    );
 
     // 宛先リストが開いている際 ESC を押した時に入力エリアにフォーカスが戻るように
     toList.querySelector("input.tooltip__searchForm").addEventListener("keydown", (event) => {
