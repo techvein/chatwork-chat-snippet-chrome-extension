@@ -181,7 +181,7 @@
         });
 
     let img = document.createElement('img');
-    img.src = chrome.extension.getURL('images/to_anon.png');
+    img.src = chrome.runtime.getURL('images/to_anon.png');
     img.style = "width:40px; height:18px";
     createIcon(
         img,
