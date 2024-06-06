@@ -5,7 +5,7 @@
     function seekToolBar() {
         return new Promise(function (resolve, reject) {
             let setToolBar = setInterval(function () {
-                chatSendTool = document.querySelector('#_chatSendTool');
+                chatSendTool = document.querySelector('#_chatSendArea ul');
                 console.log(chatSendTool);
                 if (chatSendTool) {
                     clearInterval(setToolBar);
