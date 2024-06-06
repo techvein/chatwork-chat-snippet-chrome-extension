@@ -1,27 +1,36 @@
 {
   "manifest_version": 2,
-
   "name": "ChatWork チャット入力支援ツール",
   "description": "ChatWorkのチャット入力欄に便利な機能を追加する非公式Chrome拡張です。",
   "version": "1.2.0",
-
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
   "web_accessible_resources": [
-    "images/to_anon.png"
+    {
+      "resources": [
+        "images/to_anon.png"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
   ],
-  "content_scripts": [{
-    "matches": [
-    	"https://www.chatwork.com/",
-   	"https://kcw.kddi.ne.jp/"
-    ],
-   "js":["main.js"],
-   "run_at": "document_idle"
-  }],
-  "permissions": [
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.chatwork.com/",
+        "https://kcw.kddi.ne.jp/"
+      ],
+      "js": [
+        "main.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
     "https://www.chatwork.com/",
     "https://kcw.kddi.ne.jp/"
   ]
