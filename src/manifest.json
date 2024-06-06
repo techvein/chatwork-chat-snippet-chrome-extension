@@ -25,7 +25,6 @@
   ],
   "permissions": [
     "https://www.chatwork.com/",
-    "https://kcw.kddi.ne.jp/",
-    "tabs"
+    "https://kcw.kddi.ne.jp/"
   ]
 }
