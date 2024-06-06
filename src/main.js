@@ -5,7 +5,7 @@
     function seekToolBar() {
         return new Promise(function (resolve, reject) {
             let setToolBar = setInterval(function () {
-                chatSendTool = document.querySelector('#_chatSendTool');
+                chatSendTool = document.querySelector('#_chatSendArea ul');
                 console.log(chatSendTool);
                 if (chatSendTool) {
                     clearInterval(setToolBar);
@@ -181,7 +181,7 @@
         });
 
     let img = document.createElement('img');
-    img.src = chrome.extension.getURL('images/to_anon.png');
+    img.src = chrome.runtime.getURL('images/to_anon.png');
     img.style = "width:40px; height:18px";
     createIcon(
         img,
@@ -196,7 +196,9 @@
     // "@"が入力された時に、"TO"がクリックされる
     textArea.addEventListener("keypress", (event) => {
         if (event.key === '@') {
-            document.getElementById("_to").click();
+            setTimeout(() => {
+                document.getElementById("_to").click();
+            }, 10);
         }
     });
 
